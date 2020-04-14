@@ -1,26 +1,11 @@
 window.addEventListener("load", function () {
   const createPlanetForm = document.querySelector("#createPlanetForm");
+  const createPlanetButton = document.querySelector("#createPlanetButton");
 
   createPlanetForm.addEventListener("input", function () {
-    const inputs = createPlanetForm.elements;
-
-    let inputsFilled = 0;
-    let inputsRequired = 0;
-
-    for (let i = 0; i < inputs.length; i++) {
-      if (inputs[i].required) {
-        inputsRequired += 1;
-        if (inputs[i].value) {
-          inputsFilled += 1;
-        }
-      }
-    }
-
-    if (inputsFilled === inputsRequired) {
-      document.querySelector("#createPlanetButton").disabled = false;
-    } else {
-      document.querySelector("#createPlanetButton").disabled = true;
-    }
+    form
+      .get(createPlanetForm)
+      .disable(createPlanetButton).if.requiredFieldsNotPopulated;
   });
 
   createPlanetForm.addEventListener("submit", function (event) {
@@ -28,27 +13,64 @@ window.addEventListener("load", function () {
 
     const formValues = createPlanetForm.elements;
 
-    console.log({
+    const planet = {
       name: formValues["planetName"].value,
       radius: formValues["planetRadius"].value,
       mass: formValues["planetMass"].value,
-    });
+    };
+
+    planetSystem.addPlanet(planet);
+    console.log(planetSystem.planets());
   });
 });
 
-const orbits = (() => {
-  const planets = [];
+const form = (() => {
+  const get = function (form) {
+    const disable = function (element) {
+      return {
+        if: {
+          requiredFieldsNotPopulated: (function () {
+            const inputs = form.elements;
 
-  const addPlanet = function (planet) {
-    planets.push(planet);
+            let inputsFilled = 0;
+            let inputsRequired = 0;
+
+            for (let i = 0; i < inputs.length; i++) {
+              if (inputs[i].required) {
+                inputsRequired += 1;
+                if (inputs[i].value) {
+                  inputsFilled += 1;
+                }
+              }
+            }
+            element.disabled = inputsFilled !== inputsRequired;
+          })(),
+        },
+      };
+    };
+    return {
+      disable,
+    };
   };
 
-  const tick = function () {
-    return planets;
+  return {
+    get,
+  };
+})();
+
+const planetSystem = (() => {
+  const _planets = [];
+
+  const addPlanet = function (planet) {
+    _planets.push(planet);
+  };
+
+  const planets = function () {
+    return _planets;
   };
 
   return {
     addPlanet,
-    tick,
+    planets,
   };
 })();
