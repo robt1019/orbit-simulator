@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Orbit Simulator</title>
+    <meta name="description" content="Orbit Simulator" />
+    <meta name="author" content="MyWare" />
+
+    <link rel="stylesheet" href="css/styles.css?v=1.0" />
+  </head>
+
+  <body>
+    <h1>Orbit Simulator</h1>
+
+    <form id="createPlanetForm">
+      <label for="planetName">Planet Name</label>
+      <input required name="planetName" type="text" />
+
+      <label for="planetRadius">Planet Radius (metres)</label>
+      <input required name="planetRadius" type="number" />
+
+      <label for="planetMass">Planet Mass (kgs)</label>
+      <input required name="planetMass" type="text" />
+
+      <button id="createPlanetButton" type="submit" disabled>
+        Create planet
+      </button>
+    </form>
+
+    <div>
+      <canvas id="orbitCanvas" height="500" width="500"></canvas>
+    </div>
+
+    <script src="js/scripts.js"></script>
+  </body>
+</html>
