@@ -18,7 +18,7 @@ const planetSystem = function (canvas) {
   };
 
   const draw = function () {
-    conversionFactor = canvas.height / (biggestPlanetRadius * 10);
+    conversionFactor = canvas.height / (biggestPlanetRadius * 150);
     clearCanvas();
     drawPlanet(center);
 
@@ -28,16 +28,27 @@ const planetSystem = function (canvas) {
   };
 
   const drawPlanet = function (planet) {
-    const [x, y] = planet.position;
+    let x, y;
+    if (planet.isCenterOfSystem) {
+      x = canvas.width / 2;
+      y = canvas.height / 2;
+    } else {
+      x = canvas.width / 2 + planet.distanceFromCenter * conversionFactor;
+      y = canvas.height / 2;
+      ctx.beginPath();
+      ctx.fillStyle = planet.color;
+      ctx.arc(
+        canvas.width / 2,
+        canvas.height / 2,
+        planet.distanceFromCenter * conversionFactor,
+        0,
+        2 * Math.PI
+      );
+      ctx.stroke();
+    }
     ctx.beginPath();
     ctx.fillStyle = planet.color;
-    ctx.arc(
-      (x / 100) * canvas.width,
-      (y / 100) * canvas.height,
-      planet.radius * conversionFactor,
-      0,
-      2 * Math.PI
-    );
+    ctx.arc(x, y, planet.radius * conversionFactor, 0, 2 * Math.PI);
     ctx.fill();
   };
 
@@ -59,7 +70,6 @@ const sunMoonSystemSimulator = function (canvas) {
     name: "Earth",
     radius: 6371000,
     mass: 5.972 * Math.pow(10, 24),
-    position: [50, 50],
     color: "green",
     isCenterOfSystem: true,
   });
@@ -68,13 +78,12 @@ const sunMoonSystemSimulator = function (canvas) {
     name: "Moon",
     radius: 1736000,
     mass: 1.348 * Math.pow(10, 22),
-    position: [90, 90],
     color: "grey",
     distanceFromCenter: 384400000,
   });
 
   return {
-    drawSolarSystem: system.draw,
+    draw: system.draw,
   };
 };
 
@@ -90,11 +99,9 @@ window.addEventListener("load", function () {
   const system = sunMoonSystemSimulator(canvas);
 
   window.addEventListener("resize", function () {
-    setTimeout(function () {
-      fitCanvasToScreen(canvas);
-      system.drawSolarSystem();
-    });
+    fitCanvasToScreen(canvas);
+    system.draw();
   });
 
-  system.drawSolarSystem();
+  system.draw();
 });
