@@ -18,7 +18,7 @@ const planetSystem = function (canvas) {
   };
 
   const draw = function () {
-    conversionFactor = canvas.height / (biggestPlanetRadius * 5);
+    conversionFactor = canvas.height / (biggestPlanetRadius * 10);
     clearCanvas();
     drawPlanet(center);
 
@@ -70,6 +70,7 @@ const sunMoonSystemSimulator = function (canvas) {
     mass: 1.348 * Math.pow(10, 22),
     position: [90, 90],
     color: "grey",
+    distanceFromCenter: 384400000,
   });
 
   return {
@@ -78,20 +79,19 @@ const sunMoonSystemSimulator = function (canvas) {
 };
 
 window.addEventListener("load", function () {
-  const startSimulationButton = document.querySelector(
-    "#startSimulationButton"
-  );
+  const fitCanvasToScreen = function (canvas) {
+    canvas.height = window.innerHeight * 0.9;
+    canvas.width = window.innerWidth * 0.99;
+  };
 
   const canvas = document.querySelector("#orbitCanvas");
+  fitCanvasToScreen(canvas);
 
   const system = sunMoonSystemSimulator(canvas);
-  canvas.height = window.innerHeight * 0.9;
-  canvas.width = window.innerWidth * 0.99;
 
   window.addEventListener("resize", function () {
     setTimeout(function () {
-      canvas.height = window.innerHeight * 0.9;
-      canvas.width = window.innerWidth * 0.99;
+      fitCanvasToScreen(canvas);
       system.drawSolarSystem();
     });
   });
