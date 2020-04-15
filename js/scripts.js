@@ -1,76 +1,72 @@
-window.addEventListener("load", function () {
-  const createPlanetForm = document.querySelector("#createPlanetForm");
-  const createPlanetButton = document.querySelector("#createPlanetButton");
+const planetSystem = function (canvas) {
+  const ctx = canvas.getContext("2d");
 
-  createPlanetForm.addEventListener("input", function () {
-    form
-      .get(createPlanetForm)
-      .disable(createPlanetButton).if.requiredFieldsNotPopulated;
-  });
-
-  createPlanetForm.addEventListener("submit", function (event) {
-    event.preventDefault();
-
-    const formValues = createPlanetForm.elements;
-
-    const planet = {
-      name: formValues["planetName"].value,
-      radius: formValues["planetRadius"].value,
-      mass: formValues["planetMass"].value,
-    };
-
-    planetSystem.addPlanet(planet);
-    console.log(planetSystem.planets());
-  });
-});
-
-const form = (() => {
-  const get = function (form) {
-    const disable = function (element) {
-      return {
-        if: {
-          requiredFieldsNotPopulated: (function () {
-            const inputs = form.elements;
-
-            let inputsFilled = 0;
-            let inputsRequired = 0;
-
-            for (let i = 0; i < inputs.length; i++) {
-              if (inputs[i].required) {
-                inputsRequired += 1;
-                if (inputs[i].value) {
-                  inputsFilled += 1;
-                }
-              }
-            }
-            element.disabled = inputsFilled !== inputsRequired;
-          })(),
-        },
-      };
-    };
-    return {
-      disable,
-    };
-  };
-
-  return {
-    get,
-  };
-})();
-
-const planetSystem = (() => {
   const _planets = [];
+  let biggestPlanetRadius = 0;
+  let conversionFactor;
 
   const addPlanet = function (planet) {
     _planets.push(planet);
+    if (planet.radius > biggestPlanetRadius) {
+      biggestPlanetRadius = planet.radius;
+    }
+    conversionFactor = canvas.height / (biggestPlanetRadius * 3);
   };
 
-  const planets = function () {
-    return _planets;
+  const draw = function () {
+    clearCanvas();
+    _planets.forEach(function (planet) {
+      const [x, y] = planet.position;
+      ctx.beginPath();
+      ctx.fillStyle = planet.color;
+      ctx.arc(x, y, planet.radius * conversionFactor, 0, 2 * Math.PI);
+      ctx.fill();
+    });
+  };
+
+  const clearCanvas = function () {
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
   };
 
   return {
     addPlanet,
-    planets,
+    draw,
   };
-})();
+};
+
+const solarSystemSimulator = function (canvas) {
+  const solarSystem = planetSystem(canvas);
+
+  solarSystem.addPlanet({
+    name: "Earth",
+    radius: 6371000,
+    mass: 5.972 * Math.pow(10, 24),
+    position: [30, 50],
+    color: "green",
+  });
+
+  solarSystem.addPlanet({
+    name: "Sun",
+    radius: 696340000,
+    mass: 1.989 * Math.pow(10, 30),
+    position: [200, 200],
+    color: "red",
+  });
+
+  return {
+    drawSolarSystem: solarSystem.draw,
+  };
+};
+
+window.addEventListener("load", function () {
+  const startSimulationButton = document.querySelector(
+    "#startSimulationButton"
+  );
+
+  const system = solarSystemSimulator(document.querySelector("#orbitCanvas"));
+
+  startSimulationButton.addEventListener("click", () => {
+    system.drawSolarSystem();
+  });
+});

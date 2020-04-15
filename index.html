@@ -14,24 +14,13 @@
   <body>
     <h1>Orbit Simulator</h1>
 
-    <form id="createPlanetForm">
-      <label for="planetName">Planet Name</label>
-      <input required name="planetName" type="text" />
-
-      <label for="planetRadius">Planet Radius (metres)</label>
-      <input required name="planetRadius" type="number" />
-
-      <label for="planetMass">Planet Mass (kgs)</label>
-      <input required name="planetMass" type="text" />
-
-      <button id="createPlanetButton" type="submit" disabled>
-        Create planet
-      </button>
-    </form>
-
     <div>
       <canvas id="orbitCanvas" height="500" width="500"></canvas>
     </div>
+
+    <button type="button" id="startSimulationButton">
+      Start Simulation
+    </button>
 
     <script src="js/scripts.js"></script>
   </body>
