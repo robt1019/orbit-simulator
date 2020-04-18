@@ -1,5 +1,28 @@
-const planetSystem = function (canvas) {
+const canvas2D = function (canvas) {
   const ctx = canvas.getContext("2d");
+
+  const clear = function (color) {
+    ctx.fillStyle = color || "white";
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  };
+
+  const drawCircle = function (x, y, radius, color, fill) {
+    ctx.beginPath();
+    ctx.fillStyle = color;
+    ctx.arc(x, y, radius, 0, 2 * Math.PI);
+    fill ? ctx.fill() : ctx.stroke();
+  };
+
+  return {
+    clear,
+    drawCircle,
+    width: canvas.width,
+    height: canvas.height,
+  };
+};
+
+const planetSystem = function (canvas) {
+  canvas = canvas2D(canvas);
 
   const _planets = [];
   let center;
@@ -19,7 +42,7 @@ const planetSystem = function (canvas) {
 
   const draw = function () {
     conversionFactor = canvas.height / (biggestPlanetRadius * 150);
-    clearCanvas();
+    canvas.clear("black");
     drawPlanet(center);
 
     _planets.forEach(function (planet) {
@@ -35,26 +58,21 @@ const planetSystem = function (canvas) {
     } else {
       x = canvas.width / 2 + planet.distanceFromCenter * conversionFactor;
       y = canvas.height / 2;
-      ctx.beginPath();
-      ctx.fillStyle = planet.color;
-      ctx.arc(
+      canvas.drawCircle(
         canvas.width / 2,
         canvas.height / 2,
         planet.distanceFromCenter * conversionFactor,
-        0,
-        2 * Math.PI
+        planet.color,
+        false
       );
-      ctx.stroke();
     }
-    ctx.beginPath();
-    ctx.fillStyle = planet.color;
-    ctx.arc(x, y, planet.radius * conversionFactor, 0, 2 * Math.PI);
-    ctx.fill();
-  };
-
-  const clearCanvas = function () {
-    ctx.fillStyle = "black";
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    canvas.drawCircle(
+      x,
+      y,
+      planet.radius * conversionFactor,
+      planet.color,
+      true
+    );
   };
 
   const tick = function () {
