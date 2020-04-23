@@ -1,5 +1,5 @@
-const sunMoonSystemSimulator = function (canvas) {
-  const system = planetSystem(canvas);
+const sunMoonSystemSimulator = (function () {
+  const system = planetSystem;
 
   system.addPlanet({
     name: "Earth",
@@ -18,7 +18,6 @@ const sunMoonSystemSimulator = function (canvas) {
   });
 
   return {
-    draw: system.draw,
-    tick: system.tick,
+    ...system,
   };
-};
+})();

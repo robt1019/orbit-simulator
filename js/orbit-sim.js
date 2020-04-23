@@ -1,36 +1,63 @@
 window.addEventListener("load", function () {
+  const drawSystem2D = function (canvas, systemState) {
+    const conversionFactor = canvas.height / (systemState.center.radius * 150);
+    
+    canvas2D.clear(canvas, "black");
+
+    [systemState.center].concat(systemState.planets).forEach(function (planet) {
+      let x, y;
+      if (planet.isCenterOfSystem) {
+        x = canvas.width / 2;
+        y = canvas.height / 2;
+      } else {
+        x = canvas.width / 2 + planet.distanceFromCenter * conversionFactor;
+        y = canvas.height / 2;
+        canvas2D.drawCircle(
+          canvas,
+          canvas.width / 2,
+          canvas.height / 2,
+          planet.distanceFromCenter * conversionFactor,
+          planet.color,
+          false
+        );
+      }
+      canvas2D.drawCircle(
+        canvas,
+        x,
+        y,
+        planet.radius * conversionFactor,
+        planet.color,
+        true
+      );
+    });
+  };
+
   let orbitSession = undefined;
 
   const canvas = document.querySelector("#orbitCanvas");
 
-  const fitCanvasToScreen = function (canvas) {
-    canvas.height = window.innerHeight * 0.9;
-    canvas.width = window.innerWidth * 0.99;
-  };
+  canvas2D.fitCanvasToScreen(canvas, window);
 
-  fitCanvasToScreen(canvas);
+  const system = sunMoonSystemSimulator;
 
-  const system = sunMoonSystemSimulator(canvas);
+  drawSystem2D(canvas, system.state());
 
   const startButton = document.querySelector("#startSimulationButton");
 
   startButton.addEventListener("click", function () {
     if (!orbitSession) {
       orbitSession = setInterval(function () {
-        system.tick();
-        system.draw();
+        console.log(system.tick());
       }, 500);
       isTicking = true;
     } else {
-      clearInterval(orbitSession);
+      clearInterval(orbitSession);  
       orbitSession = undefined;
     }
   });
 
-  system.draw();
-
   window.addEventListener("resize", function () {
-    fitCanvasToScreen(canvas);
-    system.draw();
+    canvas2D.fitCanvasToScreen(canvas, window);
+    drawSystem2D(canvas, system.state());
   });
 });
