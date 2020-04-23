@@ -100,7 +100,6 @@ const planetSystemPainter = (function() {
   }
 })()
 const planetSystem = (function () {
-
   const planets = [];
   let center;
 
@@ -110,18 +109,26 @@ const planetSystem = (function () {
     } else {
       planets.push(planet);
     }
- };
+  };
 
-  const tick = function () {
-    return planets;
+  const tick = function (numberOfSeconds) {
+    return planets.map(p => ({
+      ...p
+    }));
   };
 
   return {
     addPlanet,
     tick,
-    state: function() { return {center, planets}}
+    state: function () {
+      return { center, planets };
+    },
   };
 })();
+
+/**
+ * All measurements are in SI base units.
+ */
 
 const sunMoonSystemSimulator = (function () {
   const system = planetSystem;
@@ -140,6 +147,10 @@ const sunMoonSystemSimulator = (function () {
     mass: 1.348 * Math.pow(10, 22),
     color: "grey",
     distanceFromCenter: 384400000,
+    velocity: {
+      magnitude: 1022,
+      direction: 90,
+    },
   });
 
   return {

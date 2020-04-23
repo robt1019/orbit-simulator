@@ -1,5 +1,4 @@
 const planetSystem = (function () {
-
   const planets = [];
   let center;
 
@@ -9,15 +8,19 @@ const planetSystem = (function () {
     } else {
       planets.push(planet);
     }
- };
+  };
 
-  const tick = function () {
-    return planets;
+  const tick = function (numberOfSeconds) {
+    return planets.map(p => ({
+      ...p
+    }));
   };
 
   return {
     addPlanet,
     tick,
-    state: function() { return {center, planets}}
+    state: function () {
+      return { center, planets };
+    },
   };
 })();

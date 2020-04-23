@@ -1,3 +1,7 @@
+/**
+ * All measurements are in SI base units.
+ */
+
 const sunMoonSystemSimulator = (function () {
   const system = planetSystem;
 
@@ -15,6 +19,10 @@ const sunMoonSystemSimulator = (function () {
     mass: 1.348 * Math.pow(10, 22),
     color: "grey",
     distanceFromCenter: 384400000,
+    velocity: {
+      magnitude: 1022,
+      direction: 90,
+    },
   });
 
   return {
