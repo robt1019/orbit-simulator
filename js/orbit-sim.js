@@ -42,10 +42,11 @@ window.addEventListener("load", function () {
 
   drawSystem2D(canvas, system.state());
 
-  const startButton = document.querySelector("#startSimulationButton");
+  const toggleSimButton = document.querySelector("#toggleSimulationButton");
 
-  startButton.addEventListener("click", function () {
+  toggleSimButton.addEventListener("click", function () {
     if (!orbitSession) {
+      toggleSimButton.textContent = 'Stop Simulation'
       orbitSession = setInterval(function () {
         console.log(system.tick());
       }, 500);
@@ -53,6 +54,7 @@ window.addEventListener("load", function () {
     } else {
       clearInterval(orbitSession);  
       orbitSession = undefined;
+      toggleSimButton.textContent = 'Start Simulation'
     }
   });
 

@@ -15,7 +15,7 @@ const canvas2D = (function () {
   };
 
   const fitCanvasToScreen = function (canvas, wdow) {
-    canvas.height = wdow.innerHeight * 0.9;
+    canvas.height = wdow.innerHeight * 0.8;
     canvas.width = wdow.innerWidth * 0.99;
   };
 
